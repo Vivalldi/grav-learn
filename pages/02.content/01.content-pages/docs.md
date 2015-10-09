@@ -38,11 +38,14 @@ There is also some configuration settings to **control the order** of the listin
 
 {{ media['content-modular.jpg'].html('Modular Page','border') }}
 
-A modular page is a special type of listing page because it actually builds a **single page** from its **child pages**. This allows for the ability to build very complex **one-page layouts** from smaller modular content pages.  This is accomplished by constructing the **modular page** from all the **modular folders** found in the folder.
+A modular page is a special type of listing page because it actually builds a **single page** from its **child pages**. This allows for the ability to build very complex **one-page layouts** from smaller modular content pages. This is accomplished by constructing the **modular page** from multiple **modular folders** found in the page's primary folder.
 
 >>> A sample **One-Page Skeleton** using a **Modular Page** can be found in the [Grav Downloads](http://getgrav.org/downloads).
 
 Each of these page types follow the same basic structure, so before we can get into the nitty-gritty of each type, we must explain how pages in Grav are constructed.
+
+>>> A modular page, because it is intended to be part of another page, is inherently not a page you can reach
+directly via a URL.  Because of this, all modular pages are by default set as **non-routable**.
 
 ## Folders
 
@@ -76,7 +79,7 @@ When dealing with collections, there are several options available to control ho
 | **date**     | The order based on the date as defined in each page                                                                                                  |
 | **modified** | The order based on the modified timestamp of the page                                                                                                |
 | **folder**   | The order based on the folder name with any numerical prefix, i.e. `01.`, removed                                                                    |
-| **header.x** | The order based on any page header field. i.e. `header.taxonomy.year`. Also a deafult can be added via a pipe. i.e. header.taxonomy.year&#124;2015 |
+| **header.x** | The order based on any page header field. i.e. `header.taxonomy.year`. Also a default can be added via a pipe. i.e. `header.taxonomy.year|2015` |
 | **manual**   | The order based on the `order_manual` variable                                                                                                       |
 | **random**   | The order is randomized                                                                                                                              |
 
@@ -115,7 +118,7 @@ The settings between the pair of `---` markers is known as the YAML front matter
 
 In this example, we are explicitly setting the title, as well setting the taxonomy to **blog** so we can filter it later.  The content after the second `---` is the actual content that will be compiled and rendered as HTML on your site.  This is written in [Markdown](../markdown), which will be covered in detail in a future chapter.  Just know that the `#`, `**`, and `_` markers translate to a **heading1**, **bold**, and **italics**, respectively.
 
->>> NOTE: Ensure you save your `.md` files as `UTF8` files.  This will ensure they work with language-specific special characters.
+>>> Ensure you save your `.md` files as `UTF8` files.  This will ensure they work with language-specific special characters.
 
 ### Summary Size and Separator
 
@@ -145,6 +148,23 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 This will use the text above the separator when referenced by `page.summary()` and the full page content when referenced by `page.content()`.
 
->>> NOTE: When using `page.summary()`, the summary size setting will be used if the separator is not found in the page content.
+>>> When using `page.summary()`, the summary size setting will be used if the separator is not found in the page content.
+
+### Finding other Pages
+
+Grav has a useful feature that allows you to find another page and perform actions on that page. This can be accomplished with the `find()` method that simply takes the **route** and returns a new page object.
+
+This allows you to perform a wide variety of functionality from any page on your Grav site.  For example, you may want to provide a list of all current projects on a particular project detail page:
+
+{% verbatim %}
+```
+# All Projects
+<ul>
+{% for p in page.find('/projects').children if p != page %}
+<li><a href="{{p.url}}">{{ p.title }}</a></li>
+{% endfor %}
+</ul>
+```
+{% endverbatim %}
 
 In the next section we will continue and dig into the specifics of a page in detail.

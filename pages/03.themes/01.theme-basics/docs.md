@@ -4,7 +4,7 @@ taxonomy:
     category: docs
 ---
 
-Themes in Grav are quite simple, and very flexible because they are built with the powerful [Twig Templating engine](http://twig.sensiolabs.org/). We typically use [Sass CSS Extension](http://sass-lang.com) to generate our CSS files, but there is nothing stopping you from using [LESS](http://lesscss.org/), or even regular CSS. It simply comes down to your own personal preferences.
+Themes in Grav are quite simple, and very flexible because they are built with the powerful [Twig Templating engine](http://twig.sensiolabs.org/). We typically use [Sass CSS Extension](http://sass-lang.com) to generate our CSS files, but there is nothing stopping you from using [Less](http://lesscss.org/), or even regular CSS. It simply comes down to your own personal preferences.
 
 ## Content Pages & Twig Templates
 
@@ -26,31 +26,32 @@ Each theme should have a definition file called `blueprints.yaml` which has some
 
 ```ruby
 name: Antimatter
-version: 1.0
-author: Team Grav
-url: http://getgrav.org
-description: This is the default theme for Grav
+version: 1.6.0
+description: "Antimatter is the default theme included with **Grav**"
+icon: empire
+author:
+  name: Team Grav
+  email: devs@getgrav.org
+  url: http://getgrav.org
+homepage: https://github.com/getgrav/grav-theme-antimatter
+demo: http://demo.getgrav.org/blog-skeleton
+keywords: antimatter, theme, core, modern, fast, responsive, html5, css3
+bugs: https://github.com/getgrav/grav-theme-antimatter/issues
+license: MIT
 
 form:
+  validation: loose
   fields:
-    enabled:
+    dropdown.enabled:
         type: toggle
-        label: Theme status
+        label: Dropdown in navbar
         highlight: 1
         default: 1
         options:
-            1: Enabled
-            0: Disabled
+          1: Enabled
+          0: Disabled
         validate:
-            type: bool
-    color:
-        type: select
-        label: Color
-        default: blue
-        options:
-            blue: Blue
-            red: Red
-            green: Green
+          type: bool
 ```
 
 >>>> The form fields can be safely ignored at this point. These are provided for our testing of a new administration plugin to provide configuration of the theme. As this is not currently available, they are unused.
@@ -66,18 +67,47 @@ color: blue
 
 Also you should provide a `300px` x `300px` image of your theme and call it `thumbnail.jpg` at the root of the theme.
 
-### Plugin Events
+### Theme and Plugin Events
 
-Another powerful feature that is purely optional is the ability for a theme to interact with Grav via the **plugins** architecture.  To accomplish this, simply create a file called `your_theme.php` and use the following format:
+Another powerful feature that is purely optional is the ability for a theme to interact with Grav via the **plugins** architecture.  To accomplish this, simply create a file called `mytheme.php` and use the following format:
 
 	<?php
 	namespace Grav\Theme;
 
 	use Grav\Common\Theme;
 
-	class Antimatter extends Theme
+	class MyTheme extends Theme
 	{
 
+        public static function getSubscribedEvents()
+        {
+            return [
+                'onThemeInitialized' => ['onThemeInitialized', 0]
+            ];
+        }
+
+        public function onThemeInitialized()
+        {
+            if ($this->isAdmin()) {
+                $this->active = false;
+                return;
+            }
+
+            $this->enable([
+                'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
+            ]);
+        }
+
+        public function onTwigSiteVariables()
+        {
+            $this->grav['assets']
+                ->addCss('plugin://css/mytheme-core.css')
+                ->addCss('plugin://css/mytheme-custom.css');
+
+            $this->grav['assets']
+                ->add('jquery', 101)
+                ->addJs('theme://js/jquery.myscript.min.js');
+        }
 	}
 
 You can then use provide **plugins methods** which are covered in the [next section](../../plugins) in greater detail.
@@ -96,7 +126,7 @@ The story for support **forms** is the same. Create another sub-folder called `f
 
 ### Blueprints
 
-The **blueprints** folder is used to define forms for options and configuration for each of the template files. These are used by the **Administrator Panel** and are optional. The theme is 100% functional without these, but they will not be editable via the administrator panel, unless provided.
+The `blueprints/` folder is used to define forms for options and configuration for each of the template files. These are used by the **Administrator Panel** and are optional. The theme is 100% functional without these, but they will not be editable via the administrator panel, unless provided.
 
 ### SCSS / LESS / CSS
 
@@ -113,7 +143,7 @@ By default, this will compile your scss files into the `css-compiled/` folder.  
 
 ### Other Folders
 
-We recommend creating individual folders at the root of your theme for `images/`, `fonts/` and `js` to contain your custom theme images, any custom web fonts, and javascript files required.
+We recommend creating individual folders at the root of your theme for `images/`, `fonts/` and `js/` to contain your custom theme images, any custom web fonts, and javascript files required.
 
 ## Theme Example
 
@@ -123,4 +153,4 @@ Let us use the default **antimatter** theme as an example, below you can see the
 
 In this example, the actual `css`, `css-compiled`, `fonts`, `images`, `js`, `scss`, and `templates` files have been ignored to make it more readable.  The important thing to note is the overall structure of the theme.
 
->>> NOTE: The `index.html` file is just a blank file.
+>>>The `index.html` file is just a blank file.

@@ -64,7 +64,7 @@ Of course, to create a Bootstrap theme, we must actually include Bootstrap in ou
 
 In this tutorial, we will use the latest version available (at the time of writing latest version is **v3.2.0**) so you will need to [download the Bootstrap distribution package](http://getbootstrap.com/getting-started/#download). This package includes the essential bits needed to use the framework.
 
->>>> NOTE: Be sure to download the regular version labeled "Compiled and minified CSS, JavaScript, and fonts. No docs or original source files are included."
+>>>> Be sure to download the regular version labeled "Compiled and minified CSS, JavaScript, and fonts. No docs or original source files are included."
 
 Next **unzip** the package you downloaded into a temporary location. You should see **3 folders**: `css`, `fonts`, and `js`.  Copy the contents of each of these folders into the similarly-named folders you just created in your theme.
 
@@ -129,7 +129,7 @@ So we will now create a simple Bootstrap friendly base template:
         	{# Bootstrap core CSS #}
         	{% do assets.add('theme://css/bootstrap.min.css',101) %}
 
-			{# Custom styles for this theme #}
+		{# Custom styles for this theme #}
         	{% do assets.add('theme://css/bootstrap-custom.css',100) %}
 
         	{{ assets.css() }}
@@ -247,7 +247,7 @@ This is a very simple file because all of the hard-work has already been done by
 
 ### Step 7 - Theme CSS
 
-You might have noticed that in the `partials/base.html.twig` file we made reference to a custom theme css via the chunk of HTML: `<link href="{{ theme_url }}/css/bootstrap-custom.css" rel="stylesheet">`.  This file will house any custom CSS we need to fill in the gaps not provided by the Bootstrap CSS.
+You might have noticed that in the `partials/base.html.twig` file we made reference to a custom theme css via Asset Manager: `do assets.add('theme://css/bootstrap-custom.css',100)`.  This file will house any custom CSS we need to fill in the gaps not provided by the Bootstrap CSS.
 
 1. In your `user/themes/bootstrap/css` folder, create a file called `bootstrap-custom.css` with the following content:
 
@@ -348,7 +348,7 @@ You might have noticed that in the `partials/base.html.twig` file we made refere
 		}
 
 		blockquote > blockquote > blockquote > blockquote > blockquote > blockquote > p {
-			/* Blue */
+			/* Green */
 			margin-left: -150px;
 			color: #3c763d;
 			background-color: #dff0d8;

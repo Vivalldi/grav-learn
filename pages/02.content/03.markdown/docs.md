@@ -27,7 +27,7 @@ Grav ships with built-in support for [Markdown](http://daringfireball.net/projec
 
 Without further delay, let us go over the main elements of Markdown and what the resulting HTML looks like:
 
->>> NOTE: Star (<i class="icon-star"></i>) this page for easy future reference!
+>>> <i class="fa fa-bookmark"></i> Bookmark this page for easy future reference!
 
 ## Headings
 
@@ -169,7 +169,7 @@ and this HTML:
 
 
 ### strikethrough
-In GFM (GitHub flavored Markdown) you can do strickthroughs.
+In GFM (GitHub flavored Markdown) you can do strikethroughs.
 
 ```markdown
 ~~Strike through this text.~~
@@ -500,7 +500,7 @@ HTML:
 
 ### Syntax highlighting
 
-GFM, or "GitHub Flavored Markdown" also supports syntax highlighting. To activate it, simply add the file extension of the language you want to use directly after the first code "fence", ` ``` js `, and syntax highlighting will automatically be applied in the rendered HTML. For example, to apply syntax highlighting to JavaScript code:
+GFM, or "GitHub Flavored Markdown" also supports syntax highlighting. To activate it, simply add the file extension of the language you want to use directly after the first code "fence", ` ```js `, and syntax highlighting will automatically be applied in the rendered HTML. For example, to apply syntax highlighting to JavaScript code:
 
 <pre>
 ```js

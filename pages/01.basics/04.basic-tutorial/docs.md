@@ -92,14 +92,14 @@ Creating unordered lists is super simple in markdown. Simply use an `*`, `-`, or
 
 This overview should provide you with a few key pointers for writing Markdown, but you should check out our more [detailed explanation](../../content/markdown) to get a thorough understanding.
 
->>> NOTE: Ensure you save your `.md` files as `UTF8` files.  This will ensure they work with language-specific special characters.
+>>> Ensure you save your `.md` files as `UTF8` files.  This will ensure they work with language-specific special characters.
 
 ## Adding a New Page
 
 Creating a new page is a simple affair in **Grav**.  Simply follow these simple steps:
 
 1. Navigate to your pages folder: `user/pages/` and create a new folder.  In this example we will use [explicit default ordering](http://learn.getgrav.org/content/content-pages) and call the folder `02.mypage`.
-2. Launch your text editor and paste in the following sample code:
+2. Launch your text editor, create a new file, and paste in the following sample code:
 
 	```markdown
 	---

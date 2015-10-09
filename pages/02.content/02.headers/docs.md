@@ -40,13 +40,23 @@ menu: My Page
 
 The `menu` variable lets you set the text to be used in the navigation. There are several layers of fall-backs for the menu, so if no `menu` variable is set, Grav will try to use the `title` variable.
 
+### Date
+
+```ruby
+date: 01/01/2014 3:14pm
+```
+
+The `date` variable allows you to specifically set a date associated with this page.  This is often used to indicate when a post was created and can be used for display or sort-order purposes.  If not set, this defaults to the last **modified time** of the page.
+
+>>>>> Dates in the `m/d/y` or `d-m-y` formats are disambiguated by looking at the separator between the various components: if the separator is a slash (`/`), then the **American** `m/d/y` is assumed; whereas if the separator is a dash (`-`) or a dot (`.`), then the **European** `d-m-y` format is assumed.
+
 ### Published
 
 ```ruby
 published: true
 ```
 
-By default, a page is **published** unless you explicitly set `published: false` or an via a `publish_date` being in the future, or `unpublish_date` in the past. Valid values are `true` or `false`.
+By default, a page is **published** unless you explicitly set `published: false` or via a `publish_date` being in the future, or `unpublish_date` in the past. Valid values are `true` or `false`.
 
 ### Publish Date
 
@@ -70,7 +80,42 @@ Optional field, but can provide a date to automatically trigger un-publication. 
 visible: false
 ```
 
-By default, a page is **visibile** in the **navigation** if the surrounding folder has a numerical prefix, i.e. `/01.home` is visible, while `/error` is **not visible**. This behavior can be overwritten by setting the `visible` variable in the header. Valid values are `true` or `false`.
+By default, a page is **visible** in the **navigation** if the surrounding folder has a numerical prefix, i.e. `/01.home` is visible, while `/error` is **not visible**. This behavior can be overwritten by setting the `visible` variable in the header. Valid values are `true` or `false`.
+
+### Redirect
+
+```ruby
+redirect: /some/custom/route
+```
+
+or
+
+```ruby
+redirect: http://someexternalsite.com
+```
+
+As of Grav **0.9.41** can now redirect to another internal or external page right from a page header.  Of course this means this page will not be displayed, but the page can still be in a collection, menu, etc because it will exist as a page within Grav.
+
+### Routes
+
+```
+routes:
+  default: /my/example/page
+  canonical: /canonical/url/alias
+  aliases:
+    - /some/other/route
+    - /can-be-any-valid-slug
+```
+
+With Grav **0.9.30** you can now provide a **default route** that overrides the standard route structure as defined by the folder structure.
+
+You can also specify a specific **canonical route** that can be used in themes to output a canonical link:
+
+```
+<link rel="canonical" href="https://yoursite/dresses/green-dresses-are-awesome" />
+```
+
+Lastly, you can specify an array of **route aliases** that can be used as alternative routes for a particular page.
 
 ### Routable
 
@@ -127,16 +172,6 @@ taxonomy:
 A very useful header variable, `taxonomy` lets you assign values to **taxonomy** you defined as valid types in the [Site Configuration](../../basics/grav-configuration#site-configuration) file.
 
 If the taxonomy is not defined in that file, it will be ignored.  In this example, the page is defined as being in the `blog` category, and has the tags: `sample`, `demo`, and `grav`.  These taxonomies can be used to find these pages from other pages, plugins and even themes. The [Taxonomy](../taxonomy) chapter will cover this concept in more detail.
-
-### Date
-
-```ruby
-date: 01/01/2014 3:14pm
-```
-
-The `date` variable allows you to specifically set a date associated with this page.  This is often used to indicate when a post was created and can be used for display or sort-order purposes.  If not set, this defaults to the last **modified time** of the page.
-
->>> Dates in the m/d/y or d-m-y formats are disambiguated by looking at the separator between the various components: if the separator is a slash (/), then the American m/d/y is assumed; whereas if the separator is a dash (-) or a dot (.), then the European d-m-y format is assumed.
 
 ### Cache Enable
 
@@ -207,6 +242,22 @@ http_response_code: 404
 
 Allows the dynamic setting of an HTTP Response Code.
 
+### ETag
+
+```ruby
+etag: true
+```
+
+Enable or disable on a page level whether or not to display an ETag header variable with a unique value. False by default unless overridden in your `system.yaml`.
+
+### LastModified
+
+```ruby
+last_modified: true
+```
+
+Enable or disable on a page level whether or not to display an Last Modified header variable with modified date. False by default unless overridden in your `system.yaml`.
+
 
 ## Meta Page Headers
 
@@ -273,7 +324,7 @@ content:
     items: @self.children
 ```
 
-The `content.items` value tells Grav to gather up a collection of items and specifically `@self.children` indicates that the collection should consist of the child pages below this page in the folder structure.
+The `content.items` value tells Grav to gather up a collection of items and specifically `@self.children` indicates that the collection should consist of the **published child pages** below this page in the folder structure.
 
 ### Collection of Modular Children
 
@@ -282,7 +333,17 @@ content:
     items: @self.modular
 ```
 
-The `@self.modular` configuration option tells Grav that the page should consist of all the modular pages that exist as children of this particular page.
+The `@self.modular` configuration option tells Grav that the page should consist of all the **published modular pages** that exist as children of this particular page.
+
+### Collection of Page's Children
+
+```ruby
+content:
+    items:
+      @page: /blog
+```
+
+the `@page` configuration will find all **non-modular** and **published** pages for a particular page. You must provide a valid page route to this option.
 
 ### Collection by Taxonomy
 
@@ -294,7 +355,7 @@ content:
 
 Using the `@taxonomy` option, you can utilize Grav's powerful taxonomy functionality.  This is where the `taxonomy` variable in the [Site Configuration](../../basics/grav-configuration#site-configuration) file comes into play. There **must** be a definition for the taxonomy defined in that configuration file for Grav to interpret a page reference to it as valid.
 
-By setting `@taxonomy.tag: foo`, Grav will find all the pages in the `/user/pages` folder that have themselves set `tag: foo` in their taxonomy variable.
+By setting `@taxonomy.tag: foo`, Grav will find all the **published pages** in the `/user/pages` folder that have themselves set `tag: foo` in their taxonomy variable.
 
 ```ruby
 content:
@@ -302,9 +363,9 @@ content:
        @taxonomy.tag: [foo, bar]
 ```
 
-The `content.items` variable can take an array of taxonomies and it will gather up all pages that satisfy these rules. Pages that have **both** `foo` **and** `bar` tags will be collected.  The [Taxonomy](../taxonomy) chapter will cover this concept in more detail.
+The `content.items` variable can take an array of taxonomies and it will gather up all pages that satisfy these rules. Publsihed pages that have **both** `foo` **and** `bar` tags will be collected.  The [Taxonomy](../taxonomy) chapter will cover this concept in more detail.
 
->>> NOTE: If you wish to place multiple variables inline, you will need to separate sub-variables from their parents with `{}` brackets. You can then separate individual variables on that level with a comma. For example: `@taxonomy: {category: [blog, featured], tag: [foo, bar]}`. In this example, the `category` and `tag` sub-variables are placed under `@taxonomy` in the hierarchy, each with listed values placed within `[]` brackets. Pages must meet **all** these requirements to be found.
+>>> If you wish to place multiple variables inline, you will need to separate sub-variables from their parents with `{}` brackets. You can then separate individual variables on that level with a comma. For example: `@taxonomy: {category: [blog, featured], tag: [foo, bar]}`. In this example, the `category` and `tag` sub-variables are placed under `@taxonomy` in the hierarchy, each with listed values placed within `[]` brackets. Pages must meet **all** these requirements to be found.
 
 If you have multiple variables in a single parent to set, you can do this using the inline method, but for simplicity, we recommend using the standard method. Here is an example.
 
@@ -316,7 +377,19 @@ content:
       tag: [foo, bar]
 ```
 
-Each level in the heirarchy adds two whitespaces before the variable. YAML will allow you to use as many spaces as you want here, but two is standard practice. In the above example, both the `category` and `tag` variables are set under `@taxonomy`.
+Each level in the hierarchy adds two whitespaces before the variable. YAML will allow you to use as many spaces as you want here, but two is standard practice. In the above example, both the `category` and `tag` variables are set under `@taxonomy`.
+
+### Multiple Collections
+
+With Grav **0.9.41** you can not provide multiple collection definition and the resulting collection will be the sum of all the pages found from each of the collection definitions.  for example:
+
+```ruby
+content:
+  items:
+    @self.children
+    @taxonomy:
+      category: [blog, featured]
+```
 
 ### Ordering Options
 
@@ -344,13 +417,13 @@ Ordering of sub-pages follows the same rules as ordering of folders, the availab
 | **date**     | The order based on the date as defined in each page                                                                                                |
 | **modified** | The order based on the modified timestamp of the page                                                                                              |
 | **folder**   | The order based on the folder name with any numerical prefix, i.e. `01.`, removed                                                                  |
-| **header.x** | The order based on any page header field. i.e. `header.taxonomy.year`. Also a deafult can be added via a pipe. i.e. header.taxonomy.year&#124;2015 |
+| **header.x** | The order based on any page header field. i.e. `header.taxonomy.year`. Also a default can be added via a pipe. i.e. `header.taxonomy.year|2015` |
 | **manual**   | The order based on the `order_manual` variable                                                                                                     |
 | **random**   | The order is randomized                                                                                                                            |
 
-The `content.items.dir` variable controls which direction the ordering should be in. Valid values are either **desc** or **asc**.
+The `content.items.dir` variable controls which direction the ordering should be in. Valid values are either `desc` or `asc`.
 
-In in this configuration, you can see that `content.order.custom` is defining a **custom manual ordering** to ensure the page is constructed with the **showcase** first, **highlights** section second etc. Please note that if a page is not specified in the custom ordering list, then Grav falls back on the `content.order.by` for the unspecified pages.
+In this configuration, you can see that `content.order.custom` is defining a **custom manual ordering** to ensure the page is constructed with the **showcase** first, **highlights** section second etc. Please note that if a page is not specified in the custom ordering list, then Grav falls back on the `content.order.by` for the unspecified pages.
 
 `content.limit` is pretty self explanatory, and the `content.pagination` is a simple boolean flag to be used by plugins etc to know if **pagination** should be initialized for this collection.
 
@@ -382,7 +455,7 @@ The significance of these headers is that Grav does not use them by default, the
 
 Any page header such as this should be documented, and generally there will be some default value that will be used if the page does not provide it.
 
-Another example would be to store page-specific data that could then be used by Twig in the content of the page.  
+Another example would be to store page-specific data that could then be used by Twig in the content of the page.
 
 For example you might have want to associate some author reference for the page. If you added these YAML settings to the page header:
 

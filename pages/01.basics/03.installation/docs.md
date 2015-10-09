@@ -43,6 +43,8 @@ If your web root is, for example, `~/public_html` then you could extract it into
 
 ##### PHP's built-in Web Server
 
+>>>> Using the built-in PHP web server is **intended for quick testing only!**.  Also due to lack of routing functionality with the built-in web server, many Grav plugins will **simply not work**.  This includes **Admin**, **SimpleSearch**, **TaxonomyList**, **Feed**, and many others. So please use a proper web server!
+
 Grav is incredibly easy to set up and get running. You can do this without even installing or configuring a web server!  Be sure you have at least PHP version 5.4 by going to the terminal and typing:
 
 ```bash
@@ -65,8 +67,6 @@ $ php -S localhost:8000
 ```
 
 This runs the built-in PHP web server.  Then, point your browser to `http://localhost:8000` and you should see your Grav site.
-
->>>> Using the built-in PHP web server is not intended for production environments.  It is intended for development environments only.
 
 ## Successful Installation
 
@@ -108,6 +108,6 @@ To manually update the process is:
 
 3. Extract the update package over the top of your existing Grav installation and it will copy over any updates in the `core system folder`.
 
-4. Clear the Grav cache with bin/grav clear-cache` to ensure any cache or compiled files are recreated cleanly.
+4. Clear the Grav cache with `bin/grav clear-cache` to ensure any cache or compiled files are recreated cleanly.
 
 >>>> It's important not to copy the **core** Grav zip file over your current site as it could overrwrite your `user/` folder and resulting in a loss of your data.

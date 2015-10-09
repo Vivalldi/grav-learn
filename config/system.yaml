@@ -2,8 +2,9 @@ home:
   alias: '/basics'
 
 pages:
-  theme: learn
-  markdown_extra: true
+  theme: learn3
+  markdown:
+    extra: true
   process:
     markdown: true
     twig: false
@@ -11,7 +12,7 @@ pages:
 cache:
   enabled: true
   check:
-    method: folder
+    method: file
   driver: auto
   prefix: 'g'
 
